@@ -45,7 +45,7 @@ You can configure the module in your `nuxt.config.ts` file:
 ```typescript
 export default defineNuxtConfig({
   modules: ["my-module"],
-  myModule: {
+  http: {
     // Customize cookie names (optional)
     accessTokenCookie: "nexxauthAccessToken", // Default: 'appAccessToken'
     refreshTokenCookie: "nexxauthRefreshToken", // Default: 'appRefreshToken'
