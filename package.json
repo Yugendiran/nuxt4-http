@@ -1,8 +1,8 @@
 {
-  "name": "my-module",
+  "name": "@nuxt4/http",
   "version": "1.0.0",
-  "description": "My new Nuxt module",
-  "repository": "your-org/my-module",
+  "description": "Nuxt 4 HTTP Module",
+  "repository": "https://github.com/Yugendiran/nuxt4-http",
   "license": "MIT",
   "type": "module",
   "exports": {

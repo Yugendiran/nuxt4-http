@@ -8,7 +8,7 @@ export interface ModuleOptions {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: "my-module",
+    name: "@nuxt4/http",
     configKey: "http",
   },
   // Default configuration options of the Nuxt module
