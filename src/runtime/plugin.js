@@ -20,8 +20,14 @@ async function fetchWithRetry(path, options, retries = MAX_RETRIES) {
 }
 
 export default defineNuxtPlugin(async (_nuxtApp) => {
-  const accessToken = useCookie("nexxauthAccessToken");
-  const refreshToken = useCookie("nexxauthRefreshToken");
+  const config = useRuntimeConfig();
+  const cookieConfig = config.public.nuxt4Http || {};
+
+  const accessTokenName = cookieConfig.accessTokenCookie || "appAccessToken";
+  const refreshTokenName = cookieConfig.refreshTokenCookie || "appRefreshToken";
+
+  const accessToken = useCookie(accessTokenName);
+  const refreshToken = useCookie(refreshTokenName);
 
   const isUrl = (path) => {
     try {

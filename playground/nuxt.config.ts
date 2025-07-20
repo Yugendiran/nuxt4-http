@@ -1,6 +1,9 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-20",
   modules: ["../src/module"],
-  myModule: {},
+  myModule: {
+    accessTokenCookie: "nexxauthAccessToken",
+    refreshTokenCookie: "nexxauthRefreshToken",
+  },
   devtools: { enabled: true },
 });
