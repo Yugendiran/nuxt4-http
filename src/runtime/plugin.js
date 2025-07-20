@@ -1,25 +1,6 @@
 import { defineNuxtPlugin } from "#app";
 import { jwtDecode } from "jwt-decode";
 
-const MAX_RETRIES = 3;
-const NON_RETRYABLE_STATUSES = new Set([400, 404]);
-
-async function fetchWithRetry(path, options, retries = MAX_RETRIES) {
-  try {
-    const res = await fetch(path, options);
-    // Only retry if status code is not ok and not in non-retryable statuses
-    if (!res.ok && !NON_RETRYABLE_STATUSES.has(res.status) && retries > 0) {
-      return await fetchWithRetry(path, options, retries - 1);
-    }
-    return res;
-  } catch (error) {
-    if (retries > 0) {
-      return await fetchWithRetry(path, options, retries - 1);
-    }
-    throw error;
-  }
-}
-
 export default defineNuxtPlugin(async (_nuxtApp) => {
   const config = useRuntimeConfig();
   const nuxt4HttpConfig = config.public.nuxt4Http || {};
@@ -39,6 +20,25 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       return true;
     } catch {
       return path.startsWith("http://") || path.startsWith("https://");
+    }
+  };
+
+  const MAX_RETRIES = 3;
+  const NON_RETRYABLE_STATUSES = new Set([400, 404]);
+
+  const fetchWithRetry = async (path, options, retries = MAX_RETRIES) => {
+    try {
+      const res = await fetch(path, options);
+      // Only retry if status code is not ok and not in non-retryable statuses
+      if (!res.ok && !NON_RETRYABLE_STATUSES.has(res.status) && retries > 0) {
+        return await fetchWithRetry(path, options, retries - 1);
+      }
+      return res;
+    } catch (error) {
+      if (retries > 0) {
+        return await fetchWithRetry(path, options, retries - 1);
+      }
+      throw error;
     }
   };
 
