@@ -63,10 +63,9 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       headers.Authorization ||
       headers["authorization"] ||
       headers["Authorization"];
+
     if (authorization) {
       normalized["Authorization"] = authorization;
-      delete normalized.authorization;
-      delete normalized["Authorization"];
     } else if (accessToken.value) {
       normalized["Authorization"] = `Bearer ${accessToken.value}`;
     }
