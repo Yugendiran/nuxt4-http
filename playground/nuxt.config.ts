@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   http: {
     accessTokenCookie: "nexxauthAccessToken2",
     refreshTokenCookie: "nexxauthRefreshToken2",
+    apiUrl: "https://api.crackaspire.com/nexxauth/api",
   },
   devtools: { enabled: true },
 });
