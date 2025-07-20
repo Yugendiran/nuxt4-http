@@ -5,6 +5,7 @@ export interface ModuleOptions {
   apiUrl: string;
   accessTokenCookie?: string;
   refreshTokenCookie?: string;
+  loginPath?: string;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -16,6 +17,7 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     accessTokenCookie: "appAccessToken",
     refreshTokenCookie: "appRefreshToken",
+    loginPath: "/login",
   },
   setup(options, nuxt) {
     const resolver = createResolver(import.meta.url);
@@ -25,6 +27,7 @@ export default defineNuxtModule<ModuleOptions>({
       accessTokenCookie: options.accessTokenCookie || "appAccessToken",
       refreshTokenCookie: options.refreshTokenCookie || "appRefreshToken",
       apiUrl: options.apiUrl,
+      loginPath: options.loginPath || "/login",
     };
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`

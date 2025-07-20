@@ -89,9 +89,9 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       if (data.login == false) {
         if (refreshToken.value) {
           // Redirect to sign-in when token refresh is needed but no auth store is available
-          useRouter().push("/sign-in");
+          useRouter().push(nuxt4HttpConfig?.loginPath || "/login");
         } else {
-          useRouter().push("/sign-in");
+          useRouter().push(nuxt4HttpConfig?.loginPath || "/login");
         }
       }
 
@@ -148,12 +148,12 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
           // Redirect to sign-in when token refresh is needed but no auth store is available
           if (config && config.disableRedirect) {
           } else {
-            useRouter().push("/sign-in");
+            useRouter().push(nuxt4HttpConfig?.loginPath || "/login");
           }
         } else {
           if (config && config.disableRedirect) {
           } else {
-            useRouter().push("/sign-in");
+            useRouter().push(nuxt4HttpConfig?.loginPath || "/login");
           }
         }
       }
@@ -209,9 +209,9 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       if (data.login == false) {
         if (refreshToken.value) {
           // Redirect to sign-in when token refresh is needed but no auth store is available
-          useRouter().push("/sign-in");
+          useRouter().push(nuxt4HttpConfig?.loginPath || "/login");
         } else {
-          useRouter().push("/sign-in");
+          useRouter().push(nuxt4HttpConfig?.loginPath || "/login");
         }
       }
 
@@ -269,9 +269,9 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       if (data.login == false) {
         if (refreshToken.value) {
           // Redirect to sign-in when token refresh is needed but no auth store is available
-          useRouter().push("/sign-in");
+          useRouter().push(nuxt4HttpConfig?.loginPath || "/login");
         } else {
-          useRouter().push("/sign-in");
+          useRouter().push(nuxt4HttpConfig?.loginPath || "/login");
         }
       }
 
@@ -289,7 +289,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
         } else if (refreshToken.value) {
           token = refreshToken.value;
         } else {
-          useRouter().push("/sign-in");
+          useRouter().push(nuxt4HttpConfig?.loginPath || "/login");
         }
 
         let decoded = jwtDecode(token);
