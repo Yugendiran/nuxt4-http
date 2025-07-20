@@ -2,6 +2,7 @@ import { defineNuxtModule, addPlugin, createResolver } from "@nuxt/kit";
 
 // Module options TypeScript interface definition
 export interface ModuleOptions {
+  apiUrl: string;
   accessTokenCookie?: string;
   refreshTokenCookie?: string;
 }
@@ -23,6 +24,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.runtimeConfig.public.nuxt4Http = {
       accessTokenCookie: options.accessTokenCookie || "appAccessToken",
       refreshTokenCookie: options.refreshTokenCookie || "appRefreshToken",
+      apiUrl: options.apiUrl,
     };
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`

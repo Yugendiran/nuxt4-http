@@ -21,10 +21,12 @@ async function fetchWithRetry(path, options, retries = MAX_RETRIES) {
 
 export default defineNuxtPlugin(async (_nuxtApp) => {
   const config = useRuntimeConfig();
-  const cookieConfig = config.public.nuxt4Http || {};
+  const nuxt4HttpConfig = config.public.nuxt4Http || {};
 
-  const accessTokenName = cookieConfig.accessTokenCookie || "appAccessToken";
-  const refreshTokenName = cookieConfig.refreshTokenCookie || "appRefreshToken";
+  const accessTokenName = nuxt4HttpConfig.accessTokenCookie || "appAccessToken";
+  const refreshTokenName =
+    nuxt4HttpConfig.refreshTokenCookie || "appRefreshToken";
+  const apiUrl = nuxt4HttpConfig.apiUrl;
 
   const accessToken = useCookie(accessTokenName);
   const refreshToken = useCookie(refreshTokenName);
@@ -78,9 +80,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       }
 
       let res = await fetchWithRetry(
-        `${
-          isUrl(path) ? "" : useRuntimeConfig().public.API_URL + "/nexxauth/api"
-        }${path}`,
+        `${isUrl(path) ? "" : apiUrl}${path}`,
         options
       );
 
@@ -137,9 +137,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       }
 
       let res = await fetchWithRetry(
-        `${
-          isUrl(path) ? "" : useRuntimeConfig().public.API_URL + "/nexxauth/api"
-        }${path}`,
+        `${isUrl(path) ? "" : apiUrl}${path}`,
         options
       );
 
@@ -202,9 +200,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       }
 
       let res = await fetchWithRetry(
-        `${
-          isUrl(path) ? "" : useRuntimeConfig().public.API_URL + "/nexxauth/api"
-        }${path}`,
+        `${isUrl(path) ? "" : apiUrl}${path}`,
         options
       );
 
@@ -264,9 +260,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       }
 
       let res = await fetchWithRetry(
-        `${
-          isUrl(path) ? "" : useRuntimeConfig().public.API_URL + "/nexxauth/api"
-        }${path}`,
+        `${isUrl(path) ? "" : apiUrl}${path}`,
         options
       );
 
