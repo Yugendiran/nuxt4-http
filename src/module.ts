@@ -10,7 +10,7 @@ export interface ModuleOptions {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: "nuxt4-http",
+    name: "nuxt-http",
     configKey: "http",
   },
   // Default configuration options of the Nuxt module
@@ -23,7 +23,7 @@ export default defineNuxtModule<ModuleOptions>({
     const resolver = createResolver(import.meta.url);
 
     // Add the module options to the runtime config
-    nuxt.options.runtimeConfig.public.nuxt4Http = {
+    nuxt.options.runtimeConfig.public.nuxtHttp = {
       accessTokenCookie: options.accessTokenCookie || "appAccessToken",
       refreshTokenCookie: options.refreshTokenCookie || "appRefreshToken",
       apiUrl: options.apiUrl,

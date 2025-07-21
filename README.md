@@ -20,24 +20,24 @@
 
 ## Quick Setup
 
-1. Add `nuxt4-http` dependency to your project
+1. Add `nuxt-http` dependency to your project
 
 ```bash
 # Using npm
-npm install nuxt4-http
+npm install nuxt-http
 
 # Using yarn
-yarn add nuxt4-http
+yarn add nuxt-http
 
 # Using pnpm
-pnpm add nuxt4-http
+pnpm add nuxt-http
 ```
 
-2. Add `nuxt4-http` to the `modules` section of `nuxt.config.ts`
+2. Add `nuxt-http` to the `modules` section of `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({
-  modules: ["nuxt4-http"],
+  modules: ["nuxt-http"],
   http: {
     apiUrl: "https://api.example.com", // Required: Your API base URL
     accessTokenCookie: "accessToken", // Optional: Access token cookie name
@@ -64,7 +64,7 @@ That's it! You can now use `$http` in your Nuxt app ✨
 
 ```ts
 export default defineNuxtConfig({
-  modules: ["nuxt4-http"],
+  modules: ["nuxt-http"],
   http: {
     apiUrl: "https://api.myapp.com",
     accessTokenCookie: "myapp_access_token",
@@ -218,7 +218,7 @@ interface ModuleOptions {
 
 // Usage in nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ["nuxt4-http"],
+  modules: ["nuxt-http"],
   http: {
     apiUrl: "https://api.example.com", // Type-safe configuration
     accessTokenCookie: "myAccessToken",
@@ -310,11 +310,11 @@ Made with ❤️ for the Nuxt community
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/nuxt4-http/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-version-href]: https://npmjs.com/package/nuxt4-http
-[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt4-http.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-downloads-href]: https://npmjs.com/package/nuxt4-http
-[license-src]: https://img.shields.io/npm/l/nuxt4-http.svg?style=flat&colorA=18181B&colorB=28CF8D
-[license-href]: https://npmjs.com/package/nuxt4-http
+[npm-version-src]: https://img.shields.io/npm/v/nuxt-http/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-version-href]: https://npmjs.com/package/nuxt-http
+[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-http.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-downloads-href]: https://npmjs.com/package/nuxt-http
+[license-src]: https://img.shields.io/npm/l/nuxt-http.svg?style=flat&colorA=18181B&colorB=28CF8D
+[license-href]: https://npmjs.com/package/nuxt-http
 [nuxt-src]: https://img.shields.io/badge/Nuxt-18181B?logo=nuxt.js
 [nuxt-href]: https://nuxt.com
