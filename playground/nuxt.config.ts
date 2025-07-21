@@ -3,8 +3,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   compatibilityDate: "2025-07-20",
   http: {
-    accessTokenCookie: "nexxauthAccessToken2",
-    refreshTokenCookie: "nexxauthRefreshToken2",
-    apiUrl: "https://api.crackaspire.com/nexxauth/api",
+    apiUrl: "http://localhost:5000/nexxauth/api",
+    accessTokenCookie: "nexxauthAccessToken",
+    refreshTokenCookie: "nexxauthRefreshToken",
+    // middleware: {
+    //   global: true,
+    // },
+    refreshTokenEndpoint: "/auth/refresh-token",
   },
 });

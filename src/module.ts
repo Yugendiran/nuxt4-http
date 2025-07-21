@@ -19,6 +19,8 @@ export interface ModuleOptions {
   middleware?: {
     global?: boolean;
   };
+  refreshTokenEndpoint?: string;
+  enforceTokenExpiryUtc?: boolean;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -34,6 +36,8 @@ export default defineNuxtModule<ModuleOptions>({
     middleware: {
       global: false,
     },
+    refreshTokenEndpoint: "/auth/refresh-token",
+    enforceTokenExpiryUtc: true,
   },
   setup(options, nuxt) {
     const resolver = createResolver(import.meta.url);
@@ -47,6 +51,9 @@ export default defineNuxtModule<ModuleOptions>({
       middleware: {
         global: options.middleware?.global || false,
       },
+      refreshTokenEndpoint:
+        options.refreshTokenEndpoint || "/auth/refresh-token",
+      enforceTokenExpiryUtc: options.enforceTokenExpiryUtc || false,
     };
 
     // Install Pinia module

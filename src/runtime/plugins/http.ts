@@ -5,6 +5,26 @@ import {
   useRouter,
   navigateTo,
 } from "#app";
+import { useAuthStore } from "../store/auth";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+const utcToLocal = (utc: string, format?: string) => {
+  return dayjs
+    .utc(utc)
+    .tz(dayjs.tz.guess())
+    .format(format || "YYYY-MM-DD hh:mm:ss A");
+};
+
+const localToUtc = (local: string, format?: string) => {
+  return dayjs(local)
+    .utc()
+    .format(format || "YYYY-MM-DD hh:mm:ss A");
+};
 
 // Types
 interface HttpHeaders {
@@ -33,15 +53,26 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   const apiUrl = nuxtHttpConfig.apiUrl;
   const loginPath = nuxtHttpConfig?.loginPath || "/login";
 
-  const accessToken = useCookie(accessTokenName);
-  const refreshToken = useCookie(refreshTokenName);
+  let accessToken = useCookie(accessTokenName);
+  let refreshToken = useCookie(refreshTokenName);
 
   const isUrl = (path: string): boolean => {
     return path.startsWith("http://") || path.startsWith("https://");
   };
 
   const MAX_RETRIES = 3;
-  const NON_RETRYABLE_STATUSES = new Set([400, 404]);
+  const NON_RETRYABLE_STATUSES = new Set([401, 404]);
+
+  let isRefreshing: boolean = false;
+  let refreshSubscribers: Array<(token: string) => void> = [];
+
+  function onRefreshed(token: string) {
+    refreshSubscribers.map((callback) => callback(token));
+  }
+
+  function addRefreshSubscriber(callback: (token: string) => void) {
+    refreshSubscribers.push(callback);
+  }
 
   const fetchWithRetry = async (
     path: string,
@@ -104,13 +135,60 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   };
 
   // Helper function to handle authentication redirects
-  const handleAuthRedirect = (data: AuthResponse): void => {
+  const handleAuthRedirect = async (
+    data: AuthResponse,
+    method: HttpMethod,
+    originalPath: string,
+    originalOptions: RequestInit
+  ): Promise<any> => {
     if (data.login === false) {
       if (refreshToken.value) {
-        // If we have a refresh token, we might want to handle token refresh logic here
-        // For now, just redirect to login if no refresh token is available
+        if (!isRefreshing) {
+          isRefreshing = true;
+          let res = await useAuthStore().authenticateUserRefresh();
+          isRefreshing = false;
 
-        console.warn("User is not authenticated, redirecting to login.");
+          if (res.success) {
+            accessToken = useCookie(accessTokenName, {
+              expires: new Date(
+                nuxtHttpConfig.enforceTokenExpiryUtc
+                  ? utcToLocal(res.accessTokenExp, "YYYY-MM-DD HH:mm:ss")
+                  : res.accessTokenExp
+              ),
+            });
+            accessToken.value = res.accessToken;
+            onRefreshed(res.accessToken);
+            refreshSubscribers = [];
+
+            // Retry the original request with the new token
+            const updatedOptions = {
+              ...originalOptions,
+              headers: {
+                ...originalOptions.headers,
+                Authorization: `Bearer ${res.accessToken}`,
+              },
+            };
+            const url = `${isUrl(originalPath) ? "" : apiUrl}${originalPath}`;
+            const retryRes = await fetchWithRetry(url, updatedOptions);
+            return await retryRes.json();
+          }
+        } else {
+          return await new Promise((resolve) => {
+            addRefreshSubscriber((token) => {
+              const updatedOptions = {
+                ...originalOptions,
+                headers: {
+                  ...originalOptions.headers,
+                  Authorization: `Bearer ${token}`,
+                },
+              };
+              const url = `${isUrl(originalPath) ? "" : apiUrl}${originalPath}`;
+              resolve(
+                fetchWithRetry(url, updatedOptions).then((res) => res.json())
+              );
+            });
+          });
+        }
       } else {
         useRouter().push(loginPath);
       }
@@ -145,8 +223,8 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       data = await res.text();
     }
 
-    handleAuthRedirect(data);
-    return data;
+    const authResult = await handleAuthRedirect(data, method, path, options);
+    return authResult || data;
   };
 
   const api = {
