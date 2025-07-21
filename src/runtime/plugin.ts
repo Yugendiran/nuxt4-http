@@ -1,5 +1,34 @@
-import { defineNuxtPlugin } from "#app";
-import { jwtDecode } from "jwt-decode";
+import {
+  defineNuxtPlugin,
+  useCookie,
+  useRuntimeConfig,
+  useRouter,
+  navigateTo,
+} from "#app";
+
+// Types
+interface JwtPayload {
+  exp?: number;
+  iat?: number;
+  sub?: string;
+  [key: string]: any;
+}
+
+interface HttpHeaders {
+  [key: string]: any;
+}
+
+interface RequestOptions extends RequestInit {
+  method: string;
+  headers: Record<string, any>;
+}
+
+interface AuthResponse {
+  login?: boolean;
+  [key: string]: any;
+}
+
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export default defineNuxtPlugin(async (_nuxtApp) => {
   const config = useRuntimeConfig();
@@ -14,19 +43,18 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   const accessToken = useCookie(accessTokenName);
   const refreshToken = useCookie(refreshTokenName);
 
-  const isUrl = (path) => {
-    try {
-      new URL(path);
-      return true;
-    } catch {
-      return path.startsWith("http://") || path.startsWith("https://");
-    }
+  const isUrl = (path: string): boolean => {
+    return path.startsWith("http://") || path.startsWith("https://");
   };
 
   const MAX_RETRIES = 3;
   const NON_RETRYABLE_STATUSES = new Set([400, 404]);
 
-  const fetchWithRetry = async (path, options, retries = MAX_RETRIES) => {
+  const fetchWithRetry = async (
+    path: string,
+    options: RequestInit,
+    retries: number = MAX_RETRIES
+  ): Promise<Response> => {
     try {
       const res = await fetch(path, options);
       // Only retry if status code is not ok and not in non-retryable statuses
@@ -43,8 +71,17 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   };
 
   // Helper function to normalize headers (case-insensitive)
-  const normalizeHeaders = (headers = {}) => {
-    const normalized = { ...headers };
+  const normalizeHeaders = (
+    headers: HttpHeaders = {}
+  ): Record<string, string> => {
+    const normalized: Record<string, string> = {};
+
+    // Copy all existing headers
+    Object.entries(headers).forEach(([key, value]) => {
+      if (value !== undefined) {
+        normalized[key] = value;
+      }
+    });
 
     // Normalize Content-Type
     const contentType =
@@ -74,7 +111,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   };
 
   // Helper function to handle authentication redirects
-  const handleAuthRedirect = (data) => {
+  const handleAuthRedirect = (data: AuthResponse): void => {
     if (data.login === false) {
       if (refreshToken.value) {
         // If we have a refresh token, we might want to handle token refresh logic here
@@ -88,21 +125,26 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   };
 
   // Generic request handler
-  const makeRequest = async (method, path, body = null, headers = {}) => {
-    const options = {
+  const makeRequest = async (
+    method: HttpMethod,
+    path: string,
+    body: any = null,
+    headers: HttpHeaders = {}
+  ): Promise<any> => {
+    const options: RequestInit = {
       method: method.toUpperCase(),
       headers: normalizeHeaders(headers),
     };
 
     // Add body for methods that support it
-    if (body && ["POST", "PUT", "PATCH", "DELETE"].includes(options.method)) {
+    if (body && ["POST", "PUT", "PATCH", "DELETE"].includes(options.method!)) {
       options.body = JSON.stringify(body);
     }
 
     const url = `${isUrl(path) ? "" : apiUrl}${path}`;
     const res = await fetchWithRetry(url, options);
 
-    let data;
+    let data: any;
     try {
       data = await res.json();
     } catch {
@@ -115,32 +157,19 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   };
 
   const api = {
-    get: (path, headers) => makeRequest("GET", path, null, headers),
-    post: (path, body, headers) => makeRequest("POST", path, body, headers),
-    put: (path, body, headers) => makeRequest("PUT", path, body, headers),
-    delete: (path, body, headers) => makeRequest("DELETE", path, body, headers),
-    patch: (path, body, headers) => makeRequest("PATCH", path, body, headers),
+    get: (path: string, headers?: HttpHeaders) =>
+      makeRequest("GET", path, null, headers),
+    post: (path: string, body?: any, headers?: HttpHeaders) =>
+      makeRequest("POST", path, body, headers),
+    put: (path: string, body?: any, headers?: HttpHeaders) =>
+      makeRequest("PUT", path, body, headers),
+    delete: (path: string, body?: any, headers?: HttpHeaders) =>
+      makeRequest("DELETE", path, body, headers),
+    patch: (path: string, body?: any, headers?: HttpHeaders) =>
+      makeRequest("PATCH", path, body, headers),
   };
 
   const http = {
-    user: {
-      data: async () => {
-        const token = accessToken.value || refreshToken.value;
-
-        if (!token) {
-          useRouter().push(loginPath);
-          return null;
-        }
-
-        try {
-          return jwtDecode(token);
-        } catch (error) {
-          console.error("Failed to decode JWT token:", error);
-          useRouter().push(loginPath);
-          return null;
-        }
-      },
-    },
     ...api,
   };
 
