@@ -7,13 +7,6 @@ import {
 } from "#app";
 
 // Types
-interface JwtPayload {
-  exp?: number;
-  iat?: number;
-  sub?: string;
-  [key: string]: any;
-}
-
 interface HttpHeaders {
   [key: string]: any;
 }
