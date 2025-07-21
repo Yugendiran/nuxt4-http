@@ -1,6 +1,6 @@
 {
   "name": "nuxt-http",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Nuxt 4 HTTP Module",
   "repository": "https://github.com/Yugendiran/nuxt-http",
   "license": "MIT",
