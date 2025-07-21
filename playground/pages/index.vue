@@ -1,7 +1,7 @@
 <script setup>
-definePageMeta({
-  middleware: "auth",
-});
+// definePageMeta({
+//   middleware: "auth",
+// });
 </script>
 
 <template>
@@ -20,6 +20,12 @@ export default {
     // Store
     // useAuthStore().testStore();
     // console.log(useAuthStore().authenticated);
+    useAuthStore().authenticateUser(
+      "accessToken",
+      "2026-10-01T12:00:00Z",
+      "refreshToken",
+      "2026-10-01T12:00:00Z"
+    );
   },
 };
 </script>
