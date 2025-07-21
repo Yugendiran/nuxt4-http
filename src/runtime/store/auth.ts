@@ -109,7 +109,7 @@ export const useAuthStore = defineStore("auth", {
         return null;
       }
     },
-    logUserOut() {
+    logout() {
       try {
         const CONFIG = useRuntimeConfig().public.nuxtHttp;
 

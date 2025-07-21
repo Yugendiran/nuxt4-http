@@ -10,5 +10,7 @@ export default defineNuxtConfig({
     //   global: true,
     // },
     refreshTokenEndpoint: "/auth/refresh-token",
+    // loginPath: "/login",
+    enforceTokenExpiryUtc: true,
   },
 });

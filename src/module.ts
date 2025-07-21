@@ -32,7 +32,6 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     accessTokenCookie: "appAccessToken",
     refreshTokenCookie: "appRefreshToken",
-    loginPath: "/login",
     middleware: {
       global: false,
     },
@@ -47,7 +46,7 @@ export default defineNuxtModule<ModuleOptions>({
       accessTokenCookie: options.accessTokenCookie || "appAccessToken",
       refreshTokenCookie: options.refreshTokenCookie || "appRefreshToken",
       apiUrl: options.apiUrl,
-      loginPath: options.loginPath || "/login",
+      loginPath: options.loginPath || null,
       middleware: {
         global: options.middleware?.global || false,
       },

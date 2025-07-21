@@ -18,6 +18,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
 
     abortNavigation();
-    return navigateTo(config.loginPath);
+
+    if (config.loginPath) {
+      return navigateTo(config.loginPath);
+    }
   }
 });

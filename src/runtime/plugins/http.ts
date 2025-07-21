@@ -51,7 +51,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   const refreshTokenName =
     nuxtHttpConfig.refreshTokenCookie || "appRefreshToken";
   const apiUrl = nuxtHttpConfig.apiUrl;
-  const loginPath = nuxtHttpConfig?.loginPath || "/login";
+  const loginPath = nuxtHttpConfig?.loginPath || null;
 
   let accessToken = useCookie(accessTokenName);
   let refreshToken = useCookie(refreshTokenName);
@@ -190,7 +190,9 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
           });
         }
       } else {
-        useRouter().push(loginPath);
+        if (loginPath) {
+          useRouter().push(loginPath);
+        }
       }
     }
   };
