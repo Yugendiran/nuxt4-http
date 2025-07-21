@@ -1,6 +1,6 @@
 {
   "name": "@nuxt4/http",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Nuxt 4 HTTP Module",
   "repository": "https://github.com/Yugendiran/nuxt4-http",
   "license": "MIT",
@@ -22,6 +22,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "pnpm run dev:prepare && nuxi dev playground",
