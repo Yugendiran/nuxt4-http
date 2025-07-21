@@ -1,6 +1,6 @@
 {
-  "name": "@nuxt4/http",
-  "version": "1.0.2",
+  "name": "nuxt4-http",
+  "version": "1.0.0",
   "description": "Nuxt 4 HTTP Module",
   "repository": "https://github.com/Yugendiran/nuxt4-http",
   "license": "MIT",
@@ -30,7 +30,7 @@
     "dev": "pnpm run dev:prepare && nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "pnpm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "release": "pnpm run prepack && npm publish",
     "release:default": "pnpm run lint && pnpm run test && pnpm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",

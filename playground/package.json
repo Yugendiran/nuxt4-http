@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@nuxt4/http-playground",
+  "name": "nuxt4-http-playground",
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",
