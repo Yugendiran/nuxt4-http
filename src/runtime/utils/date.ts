@@ -7,17 +7,17 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export { dayjs };
-
-export const utcToLocal = (utc: string, format?: string) => {
+const utcToLocal = (utc: string, format?: string) => {
   return dayjs
     .utc(utc)
     .tz(dayjs.tz.guess())
     .format(format || "YYYY-MM-DD hh:mm:ss A");
 };
 
-export const localToUtc = (local: string, format?: string) => {
+const localToUtc = (local: string, format?: string) => {
   return dayjs(local)
     .utc()
     .format(format || "YYYY-MM-DD hh:mm:ss A");
 };
+
+export { dayjs, utcToLocal, localToUtc };

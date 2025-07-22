@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useCookie, useRuntimeConfig } from "#app";
-import { dayjs, utcToLocal, localToUtc } from "../utils/dayjs";
+import { utcToLocal } from "../utils/date";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({

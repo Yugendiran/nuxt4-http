@@ -6,7 +6,7 @@ import {
   navigateTo,
 } from "#app";
 import { useAuthStore } from "../store/auth";
-import { dayjs, utcToLocal, localToUtc } from "../utils/dayjs";
+import { utcToLocal } from "../utils/date";
 
 // Types
 interface HttpHeaders {

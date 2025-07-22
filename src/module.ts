@@ -55,6 +55,22 @@ export default defineNuxtModule<ModuleOptions>({
       enforceTokenExpiryUtc: options.enforceTokenExpiryUtc || false,
     };
 
+    // Configure Vite to handle dayjs properly
+    nuxt.options.vite = nuxt.options.vite || {};
+    nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
+    nuxt.options.vite.optimizeDeps.include =
+      nuxt.options.vite.optimizeDeps.include || [];
+    nuxt.options.vite.optimizeDeps.include.push(
+      "dayjs",
+      "dayjs/plugin/utc",
+      "dayjs/plugin/timezone"
+    );
+
+    // Ensure dayjs is transpiled
+    nuxt.options.build = nuxt.options.build || {};
+    nuxt.options.build.transpile = nuxt.options.build.transpile || [];
+    nuxt.options.build.transpile.push("dayjs");
+
     // Install Pinia module
     installModule("@pinia/nuxt");
 
