@@ -3,7 +3,6 @@ import {
   navigateTo,
   useRuntimeConfig,
   useCookie,
-  abortNavigation,
 } from "#app";
 
 export default defineNuxtRouteMiddleware((to, from) => {
@@ -12,15 +11,24 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const accessToken = useCookie(config.accessTokenCookie);
   const refreshToken = useCookie(config.refreshTokenCookie);
 
-  if (!accessToken.value) {
-    if (refreshToken.value) {
-      return;
-    }
+  // If user has access token, allow navigation
+  if (accessToken.value) {
+    return;
+  }
 
-    abortNavigation();
+  // If user has refresh token but no access token, allow navigation
+  // (the HTTP plugin should handle token refresh)
+  if (refreshToken.value) {
+    return;
+  }
 
-    if (config.loginPath) {
-      return navigateTo(config.loginPath);
-    }
+  // If no tokens and user is trying to access login page, allow it
+  if (config.loginPath && to.path === config.loginPath) {
+    return;
+  }
+
+  // If no tokens and not on login page, redirect to login
+  if (config.loginPath) {
+    return navigateTo(config.loginPath);
   }
 });
